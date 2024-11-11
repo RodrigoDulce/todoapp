@@ -8,29 +8,35 @@ import com.example.todoapp.R
 import com.example.todoapp.data.TareaModelo
 import com.example.todoapp.databinding.ItemTareaBinding
 
-class TareaAdaptador(val onClickDelete:(Int)->Unit, val onClickEditar:(Int)-> Unit,val onTaskComplete:(Int,Boolean)->Unit):RecyclerView.Adapter<TareaAdaptador.ViewHolder>(){
+class TareaAdaptador(
+    val onClickDelete:(Int)->Unit,
+    val onClickEditar:(Int)-> Unit,
+    val onTaskComplete:(Int,Boolean)->Unit
+) :RecyclerView.Adapter<TareaAdaptador.ViewHolder>() {
+
     private var listaTarea = mutableListOf<TareaModelo>()
 
     fun setTarea(tarea: MutableList<TareaModelo>) {
         listaTarea = tarea
     }
 
+    //Clase viewholder que infla el contenido del recyclerview
     inner class ViewHolder(view:View):RecyclerView.ViewHolder(view){
 
         private val bindingAdaptador = ItemTareaBinding.bind(view)
 
-        fun bind(tarea: TareaModelo, index : Int) {
+        fun bind(tarea: TareaModelo, posicion : Int) {
             bindingAdaptador.tvTareaCarta.text=tarea.nombreTarea
             bindingAdaptador.tvFinalizacion.text=tarea.tareaFinalizacion
             bindingAdaptador.cbCompletado.isChecked = tarea.tareaCompleta
             bindingAdaptador.cbCompletado.setOnCheckedChangeListener { _, isChecked ->
-                onTaskComplete(index,isChecked)
+                onTaskComplete(posicion,isChecked)
             }
             bindingAdaptador.btBorrarTarea.setOnClickListener {
-                onClickDelete(index)
+                onClickDelete(posicion)
             }
             bindingAdaptador.btEditarTarea.setOnClickListener {
-                onClickEditar(index)
+                onClickEditar(posicion)
             }
         }
     }
@@ -54,6 +60,4 @@ class TareaAdaptador(val onClickDelete:(Int)->Unit, val onClickEditar:(Int)-> Un
             0
         }
     }
-
-
 }

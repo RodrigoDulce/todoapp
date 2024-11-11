@@ -4,25 +4,29 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.todoapp.data.ActualizarTarea
+import com.example.todoapp.data.ActualizarTareaServicio
+import com.example.todoapp.data.BorrarTareaServicio
 import com.example.todoapp.data.GuardarTareaServicio
-import com.example.todoapp.data.ObtenerTarea
+import com.example.todoapp.data.ObtenerTareaServicio
 import com.example.todoapp.data.TareaModelo
 import kotlinx.coroutines.launch
 
 class TareasViewModel : ViewModel() {
 
+    //Declaracion de objetos
     private val guardarTareaServicio = GuardarTareaServicio()
-    private val obtenerTarea = ObtenerTarea()
-    private val actualizarTarea = ActualizarTarea()
+    private val obtenerTareaServicio = ObtenerTareaServicio()
+    private val actualizarTareaServicio = ActualizarTareaServicio()
+    private val borrarTareaServicio = BorrarTareaServicio()
 
-    private val _livedatatarea = MutableLiveData<List<TareaModelo>>()
-    val livadatatarea: LiveData<List<TareaModelo>> get() = _livedatatarea
+    //Encapsulamiento
+    private val _liveDataTarea = MutableLiveData<List<TareaModelo>>()
+    val livadatatarea: LiveData<List<TareaModelo>> get() = _liveDataTarea
 
     private val _tareaEditable = MutableLiveData<TareaModelo?>()
     val tareaEditable :LiveData<TareaModelo?> get() = _tareaEditable
 
-    fun guardartarea(
+    fun guardarTarea(
         idTarea: Int,
         nombreTarea: String,
         fechaFinalizacion: String,
@@ -30,32 +34,40 @@ class TareasViewModel : ViewModel() {
         idUsuario: String
     ) {
         viewModelScope.launch {
-            guardarTareaServicio.guardartarea(
-                idTarea,
-                nombreTarea,
-                fechaFinalizacion,
-                estadoTarea,
-                idUsuario
+            guardarTareaServicio.guardarTarea(
+               idTarea =  idTarea,
+               nombreTarea =  nombreTarea,
+               fechaFinalizacion = fechaFinalizacion,
+               estadoTarea =  estadoTarea,
+               idUsuario =  idUsuario
             )
         }
     }
 
     fun obtenertareas(idUsuario: String) {
         viewModelScope.launch {
-            val resultado = obtenerTarea.obtenertarea(idUsuario)
-            _livedatatarea.value = resultado
+            val resultado = obtenerTareaServicio.obtenerTareas(
+                idusuario =  idUsuario
+            )
+            _liveDataTarea.value = resultado
         }
     }
 
-    fun borrartarea(idUsuario: String, index: Int) {
+    fun borrarTarea(idUsuario: String, posicion: Int) {
         viewModelScope.launch {
-            obtenerTarea.obteneruidtarea(idUsuario, index)
+            borrarTareaServicio.obtenerIdtarea(
+                idusuario =  idUsuario,
+                posicion = posicion
+            )
         }
     }
 
-    fun completartarea(idUsuario: String, index: Int, estadoTarea: Boolean) {
+    fun completarTarea(idUsuario: String, posicion: Int, estadoTarea: Boolean) {
         viewModelScope.launch {
-            actualizarTarea.obteneractarea(idUsuario,index,estadoTarea)
+            actualizarTareaServicio.obtenerTarea(
+                idUsuario =  idUsuario,
+                posicion = posicion,
+                estadoTarea =  estadoTarea)
 
         }
     }
@@ -64,16 +76,22 @@ class TareasViewModel : ViewModel() {
         _tareaEditable.value = null
     }
 
-    fun obtenerTareaEditable(idUser: String, index: Int){
+    fun obtenerTareaEditable(idUsuario: String, posicion: Int){
         viewModelScope.launch {
-            val result = actualizarTarea.obtenerTareaEditable(idUser,index)
+            val result = actualizarTareaServicio.obtenerTareaEditable(
+                idUsuario = idUsuario,
+                posicion = posicion)
             _tareaEditable.value = result
         }
     }
 
     fun editarTarea(idUsuario: String, idTarea : String , nombreTarea:String, fechaTarea:String) {
         viewModelScope.launch {
-            actualizarTarea.editarTareas(idTarea, idUsuario, nombreTarea, fechaTarea)
+            actualizarTareaServicio.editarTareas(
+               idTarea =  idTarea,
+               idUsuario = idUsuario,
+               nombreTarea = nombreTarea,
+               fechaTarea = fechaTarea)
         }
     }
 }

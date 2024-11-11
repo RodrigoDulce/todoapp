@@ -40,38 +40,36 @@ class MenuActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding=ActivityMenuBinding.inflate(layoutInflater)
-        enableEdgeToEdge()
         setContentView(binding.root)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
 
+        //Inicializacion de recyclerview
         iniciarRecyclerview()
 
+        //Accion del boton 'faAgregarTarea'
         binding.faAgregarTarea.setOnClickListener {
             setTarea()
         }
 
-
+        //Accion del boton 'faCerrarSesion'
         binding.faCerrarSesion.setOnClickListener {
             auth = Firebase.auth
 
             auth.signOut()
             irInicioSesion()
         }
+
         cargarTarea()
     }
 
+    //Funcion que inicializa el contenido del
     private fun iniciarRecyclerview(){
         auth=Firebase.auth
         tareaAdaptador=TareaAdaptador(onClickDelete = {position->
-            tareasViewModel.borrartarea(auth.uid.toString(),position)
+            tareasViewModel.borrarTarea(auth.uid.toString(),position)
             borrarItem(position)
         },
-            onTaskComplete = {position,estadotarea ->
-                tareasViewModel.completartarea(auth.uid.toString(),position,estadotarea)
+            onTaskComplete = {position , estadoTarea ->
+                tareasViewModel.completarTarea(auth.uid.toString(),position,estadoTarea)
             },
             onClickEditar ={ posicion ->
                 tareasViewModel.obtenerTareaEditable(auth.uid.toString(),posicion)
@@ -89,13 +87,13 @@ class MenuActivity : AppCompatActivity() {
 
     }
 
-    private fun irInicioSesion(){
-        startActivity(Intent(this, MainActivity::class.java))
-        finish()
-    }
-
+    //Funcion que abre el dialogo para editar las tareas
     @SuppressLint("SetTextI18n")
-    private fun editarTarea(idTareaActualizable : String, tareaAnterior:String, fechaAnterior:String) {
+    private fun editarTarea(
+        idTareaActualizable: String,
+        tareaAnterior: String,
+        fechaAnterior: String
+    ) {
 
         val dialog = Dialog(this)
         dialog.setContentView(R.layout.dialogo_tarea)
@@ -115,7 +113,7 @@ class MenuActivity : AppCompatActivity() {
         nombreTarea.setText(tareaAnterior)
         val fechaFormateada = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
-        val date : Date? = fechaFormateada.parse(fechaAnterior)
+        val date: Date? = fechaFormateada.parse(fechaAnterior)
 
         date?.let {
             //pone la fecha en el calendario
@@ -170,7 +168,7 @@ class MenuActivity : AppCompatActivity() {
 
     }
 
-
+    //Funcion que abre el dialogo para crear una tarea
     @SuppressLint("SetTextI18n")
     private fun setTarea() {
 
@@ -211,7 +209,7 @@ class MenuActivity : AppCompatActivity() {
 
                 val fecha = "${dayOfMonth}/${month}/${year}"
 
-                tareasViewModel.guardartarea(
+                tareasViewModel.guardarTarea(
                     idTarea,
                     nombreTarea.text.toString(),
                     fecha,
@@ -236,6 +234,7 @@ class MenuActivity : AppCompatActivity() {
 
     }
 
+    //Comprueba que en el recyclerview haya un item y oculta el texto
     private fun comprobarTarea() {
         if (itemAdaptador.isEmpty()) {
             binding.tvTextoTarea.visibility = View.VISIBLE
@@ -246,6 +245,7 @@ class MenuActivity : AppCompatActivity() {
         }
     }
 
+    //Funcion para borrar un item del recyclerview cuando se borra una tarea
     @SuppressLint("NotifyDataSetChanged")
     private fun borrarItem(index:Int){
 
@@ -257,16 +257,27 @@ class MenuActivity : AppCompatActivity() {
         }
     }
 
+    //Funcion que carga todas las tareas que tenga el usuario
     @SuppressLint("NotifyDataSetChanged")
     private fun cargarTarea(){
-        val idusuario=FirebaseAuth.getInstance()
-        tareasViewModel.obtenertareas(idusuario.uid.toString())
+
+        val idUsuario=FirebaseAuth.getInstance()
+
+        tareasViewModel.obtenertareas(idUsuario.uid.toString())
+
         tareasViewModel.livadatatarea.observe(this){ tarea ->
             itemAdaptador.clear()
             itemAdaptador.addAll(tarea)
             tareaAdaptador.setTarea(itemAdaptador)
             tareaAdaptador.notifyDataSetChanged()
+            comprobarTarea()
         }
 
+    }
+
+    //Funcion para ir al inicio de sesion
+    private fun irInicioSesion(){
+        startActivity(Intent(this, MainActivity::class.java))
+        finish()
     }
 }

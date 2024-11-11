@@ -16,8 +16,11 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
 class CargaActivity : AppCompatActivity() {
+
     private lateinit var auth: FirebaseAuth
+
     override fun onCreate(savedInstanceState: Bundle?) {
+
         val pantallaCarga=installSplashScreen()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_car)
@@ -26,15 +29,14 @@ class CargaActivity : AppCompatActivity() {
 
     }
 
+    //Comprobacion de que un usuario haya iniciado sesion o haya cerrado sesion
     override fun onStart() {
         super.onStart()
         val usuario=auth.currentUser
         Handler(Looper.getMainLooper()).postDelayed({
 
-
-
                 if (usuario!= null) {
-                    irmenu()
+                    irMenu()
                     finish()
                 }else{
                     irlogin()
@@ -42,11 +44,13 @@ class CargaActivity : AppCompatActivity() {
 
         }, 3000)
     }
-    private fun irmenu(){
+
+    private fun irMenu(){
         val intent=Intent(this,MenuActivity::class.java)
         startActivity(intent)
     }
-    fun irlogin(){
+
+    private fun irlogin(){
         val intent=Intent(this,MainActivity::class.java)
         startActivity(intent)
         finish()

@@ -21,30 +21,24 @@ import com.google.firebase.auth.auth
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private val loginViewModel:LoginViewModel by viewModels()
     private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding=ActivityMainBinding.inflate(layoutInflater)
-//        enableEdgeToEdge()
         setContentView(binding.root)
-//        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-//            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-//            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-//            insets
-//        }
+
         binding.tvClickRegistrarse.setOnClickListener {
             val startActivity = Intent(applicationContext, RegistrarActivity::class.java)
             startActivity(startActivity)
         }
 
         binding.btnIniciarSesion.setOnClickListener {
-            iniciosesion()
+            inicioSesion()
         }
     }
-    private fun iniciosesion() {
+
+    private fun inicioSesion() {
         val email = binding.etCorreoUsuario.text.toString()
         val contraseña = binding.etContraseAUsuario.text.toString()
         if (email.isEmpty() || !isValidEmail(email)){
@@ -66,10 +60,12 @@ class MainActivity : AppCompatActivity() {
                 }
         }
     }
+
     private fun isValidEmail(correo: String): Boolean {
         return Patterns.EMAIL_ADDRESS.matcher(correo).matches()
     }
 
+    //Comprobacion de que un usuario haya iniciado sesion o haya cerrado sesion
     public override fun onStart() {
         super.onStart()
         auth = Firebase.auth

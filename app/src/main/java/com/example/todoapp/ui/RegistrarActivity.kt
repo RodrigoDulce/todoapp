@@ -1,5 +1,6 @@
 package com.example.todoapp.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
 import android.widget.Toast
@@ -12,23 +13,23 @@ import com.example.todoapp.R
 import com.example.todoapp.databinding.ActivityRegistrarBinding
 
 class RegistrarActivity : AppCompatActivity() {
+
     private lateinit var binding:ActivityRegistrarBinding
     private val loginViewModel:LoginViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+
         binding=ActivityRegistrarBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+
         binding.btnRegistroSesion.setOnClickListener {
-            registrarusuario()
+            registrarUsuario()
         }
     }
-    private fun registrarusuario(){
+
+    //Funcion para registrar a un usuario
+    private fun registrarUsuario(){
 
         val email = binding.etRegistroCorreo.text.toString()
         val contraseña = binding.etContraseAAUsuario.text.toString()
@@ -44,14 +45,19 @@ class RegistrarActivity : AppCompatActivity() {
             binding.etConfirmarContraseA.error="la contraseña no es igual"
 
         }else{
-            loginViewModel.registrousuario(email, contraseña)
+            loginViewModel.registroUsuario(email, contraseña)
             Toast.makeText(applicationContext,"se registro con exito",Toast.LENGTH_SHORT).show()
-
-
+            irIniciarSesion()
         }
     }
 
+    private fun irIniciarSesion(){
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
 
+    //Comprueba que el campo email sea un email correcto
     private fun isValidEmail(correo: String): Boolean {
         return Patterns.EMAIL_ADDRESS.matcher(correo).matches()
     }

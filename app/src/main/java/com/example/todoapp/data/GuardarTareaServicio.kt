@@ -6,7 +6,8 @@ import com.google.firebase.firestore.firestore
 
 class GuardarTareaServicio {
 
-    fun guardartarea(
+    //Funcion para guardar una tarea
+    fun guardarTarea(
         idTarea: Int,
         nombreTarea: String,
         fechaFinalizacion: String,
