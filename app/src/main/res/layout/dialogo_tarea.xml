@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/etNombreTarea"
+        style="@android:style/Widget.DeviceDefault.EditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#000000"
+        android:hint="Nombre de la tarea"
+        android:inputType="text"
+        android:minHeight="50dp"
+        android:singleLine="true" />
+
+    <TextView
+        android:id="@+id/tvDiaTarea"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Fecha de finalizacion:"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <CalendarView
+        android:id="@+id/cvFechaFinalizacion"
+        style="@android:style/Widget.DeviceDefault.CalendarView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxDate="12/31/2050"
+        android:minDate="01/01/2024" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnGuardarTarea"
+            style="@style/Widget.Material3.Button.ElevatedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Guardar tarea"
+            android:textColor="#FFF"
+            android:backgroundTint="#FF5722"
+            android:layout_weight=".4"
+            android:padding="8dp"/>
+
+        <Button
+            android:id="@+id/btnCerrarDialogo"
+            style="@style/Widget.Material3.Button.ElevatedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancelar"
+            android:layout_weight=".45"
+            android:padding="8dp"
+            android:textColor="#FFF"
+            android:backgroundTint="#FF5722"/>
+
+    </LinearLayout>
+
+</LinearLayout>
